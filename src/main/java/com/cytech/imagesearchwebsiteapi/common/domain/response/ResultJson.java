@@ -1,0 +1,70 @@
+package com.cytech.imagesearchwebsiteapi.common.domain.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
+/**
+ * @author yang
+ * 返回类型
+ * Created at 2018/3/8.
+ */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ResultJson implements Serializable {
+
+    private static final long serialVersionUID = 783015033603078674L;
+    private int code;
+    private String msg;
+    private Object data;
+
+    public static ResultJson ok() {
+        return ok("");
+    }
+
+    public static ResultJson ok(Object o) {
+        return new ResultJson(ResultCode.SUCCESS, o);
+    }
+
+    public static ResultJson processing(String taskId) {
+        return new ResultJson(ResultCode.TASK_PROCESSING, taskId);
+    }
+
+    public static ResultJson failure(ResultCode code) {
+        return failure(code, "");
+    }
+
+    public static ResultJson failure(String msg) {
+        return failure(ResultCode.SERVER_ERROR, msg);
+    }
+
+    public static ResultJson failure(ResultCode code, Object o) {
+        return new ResultJson(code, o);
+    }
+
+    public ResultJson(ResultCode resultCode) {
+        setResultCode(resultCode);
+    }
+
+    public ResultJson(ResultCode resultCode, Object data) {
+        setResultCode(resultCode);
+        this.data = data;
+    }
+
+    public void setResultCode(ResultCode resultCode) {
+        this.code = resultCode.getCode();
+        this.msg = resultCode.getMsg();
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+            "\"code\":" + code +
+            ", \"msg\":\"" + msg + '\"' +
+            ", \"data\":\"" + data + '\"' +
+            '}';
+    }
+}
