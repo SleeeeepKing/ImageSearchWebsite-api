@@ -2,12 +2,14 @@ package com.cytech.imagesearchwebsiteapi.img.domain;
 
 
 import com.cytech.imagesearchwebsiteapi.common.domain.AbstractCreateTimeAuditing;
+import com.sun.istack.NotNull;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,11 +30,9 @@ public class Img extends AbstractCreateTimeAuditing {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @ApiModelProperty(value = "图片名称")
-    private String name;
-
-    @ApiModelProperty(value = "图片描述")
-    private String description;
+    @ApiModelProperty(value = "url")
+    @NotNull
+    private String url;
 
     @ApiModelProperty(value = "图片特征向量")
     private String value;

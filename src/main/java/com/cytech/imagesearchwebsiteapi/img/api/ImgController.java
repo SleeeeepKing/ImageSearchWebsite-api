@@ -1,5 +1,6 @@
 package com.cytech.imagesearchwebsiteapi.img.api;
 
+import com.cytech.imagesearchwebsiteapi.img.domain.dto.ImgDTO;
 import com.cytech.imagesearchwebsiteapi.img.service.ImgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -16,12 +18,12 @@ public class ImgController {
     private ImgService imgService;
 
     @GetMapping(value = "/{id}")
-    public List<List<Double>> getImgList(@PathVariable String id) {
+    public ImgDTO getImgList(@PathVariable String id) throws IOException {
         return imgService.getImgList(id);
     }
 
     @GetMapping(value = "/random")
-    public List<List<Double>> getRandomImgList() {
+    public List<ImgDTO> getRandomImgList() throws IOException {
         return imgService.getRandomImgList();
     }
 }
