@@ -7,13 +7,12 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 
 @Entity
@@ -25,8 +24,18 @@ import java.time.LocalDateTime;
 public class Img extends AbstractCreateTimeAuditing {
     // lrn
     @Id
-    @ApiModelProperty(value = "id")
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
+
+    @ApiModelProperty(value = "图片名称")
+    private String name;
+
+    @ApiModelProperty(value = "图片描述")
+    private String description;
+
+    @ApiModelProperty(value = "图片特征向量")
+    private String value;
 
 
 }
