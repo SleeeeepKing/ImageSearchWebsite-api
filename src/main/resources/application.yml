@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/imgdb
+    url: jdbc:postgresql://localhost:55321/ImgDb
     username: luo
-    password: 888888
+    password: 666666
     driver-class-name: org.postgresql.Driver
   mvc:
     pathmatch:

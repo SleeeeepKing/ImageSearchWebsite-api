@@ -19,10 +19,10 @@ import javax.persistence.Table;
 
 @Entity
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Table(name = "img")
-@ApiModel(value = "Tax", description = "税金")
+@ApiModel(value = "img", description = "图片")
 public class Img extends AbstractCreateTimeAuditing {
     // lrn
     @Id
