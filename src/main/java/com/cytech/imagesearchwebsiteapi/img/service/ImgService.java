@@ -3,8 +3,14 @@ package com.cytech.imagesearchwebsiteapi.img.service;
 import com.cytech.imagesearchwebsiteapi.img.domain.Img;
 import com.cytech.imagesearchwebsiteapi.img.domain.dto.ImgDTO;
 import com.cytech.imagesearchwebsiteapi.img.repository.ImgRepository;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.exception.DockerException;
+import com.github.dockerjava.api.model.Container;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +25,8 @@ import java.util.List;
 public class ImgService {
     @Autowired
     private ImgRepository imgRepository;
+    @Autowired
+    private DockerClient dockerClient;
 
     public List<ImgDTO> getRandomImgList() throws IOException {
         List<Img> imgs = imgRepository.findRandomImg();
@@ -92,6 +100,14 @@ public class ImgService {
     private String doubleArrayToString(double[] vector) {
         String str = Arrays.toString(vector); // 将double[]转换为字符串
         return str.substring(1, str.length() - 1); // 去掉左右方括号
+    }
+
+    @RequestMapping(value = "/containers", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Container> getContainers() throws DockerException, InterruptedException {
+//        List<Container> containers = dockerClient.listContainers();
+//        return containers;
+        return null;
     }
 
     public void updateImgValue(String url) throws IOException {
