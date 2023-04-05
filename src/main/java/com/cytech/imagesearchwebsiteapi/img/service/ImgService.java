@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public class ImgService {
-    public List<List<Double>> getImgList(String id) {
+    public List<List<Double>> getRandomImgList() {
 
         Double[][] test = {{0.010447115637362003,
                 -0.013402849435806274,
@@ -529,5 +529,10 @@ public class ImgService {
             imgList.add(Arrays.asList(doubles));
         }
         return imgList;
+    }
+
+    public List<List<Double>> getImgList(String id) {
+
+        return null;
     }
 }

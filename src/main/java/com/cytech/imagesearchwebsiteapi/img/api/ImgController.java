@@ -19,4 +19,9 @@ public class ImgController {
     public List<List<Double>> getImgList(@PathVariable String id) {
         return imgService.getImgList(id);
     }
+
+    @GetMapping(value = "/random")
+    public List<List<Double>> getRandomImgList() {
+        return imgService.getRandomImgList();
+    }
 }
