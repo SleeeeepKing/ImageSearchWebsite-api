@@ -50,9 +50,10 @@ public class ImgService {
      * 计算两个向量的余弦相似度
      */
 
-    public ImgDTO getImgList(String id) throws IOException {
+    public ImgDTO getImgList(String text) throws IOException {
         // todo 将strVex改成把id转换成向量
-        double[] strVex = {1, 2, 3};
+        Object doubleArr = apiCaller.callGet("http://localhost:8990/text2predict", new RequestBody("text", text)).getData();
+        double[] strVex = ((double[][]) doubleArr)[0];
         List<Img> imgList = imgRepository.findAll();
         List<double[]> imgVexList = new ArrayList<>();
         imgList.forEach(img -> {
@@ -107,7 +108,7 @@ public class ImgService {
     }
     public void updateImgValue(String url) throws IOException {
         Img img = imgRepository.findByUrl(url);
-        ImgData imgData = new ImgData(convertImageToBase64(url));
+        ImgData imgData = new ImgData(convertImageToBase64(img.getUrl()));
         // 用imageData转为json并作为入参调用api获取value
         RequestBody requestBody = new RequestBody("image_data", imgData.getImage_data());
         // 将value改成调用api返回的值并使用doubleArrayToString方法将double[]转换为字符串

@@ -17,9 +17,9 @@ public class ImgController {
     @Autowired
     private ImgService imgService;
 
-    @GetMapping(value = "/{id}")
-    public ImgDTO getImgList(@PathVariable String id) throws IOException {
-        return imgService.getImgList(id);
+    @GetMapping(value = "/{text}")
+    public ImgDTO getImgList(@PathVariable String text) throws IOException {
+        return imgService.getImgList(text);
     }
 
     @GetMapping(value = "/random")

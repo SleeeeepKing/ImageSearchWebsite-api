@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Response {
     private int code;
-    private String msg;
+//    private String msg;
     private Object data;
 }

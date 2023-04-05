@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApiCaller {
     public Response callGet(String url, RequestBody request) {
+        Response response = null;
         try {
             // 创建HttpClient实例
             CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -34,14 +35,15 @@ public class ApiCaller {
 
             // 获取响应实体
             String responseBody = EntityUtils.toString(httpResponse.getEntity());
-            System.out.println("Response body: " + responseBody);
+            response = new Response(httpResponse.getStatusLine().getStatusCode(), responseBody);
+            System.out.println("Response body: " + response);
 
             // 关闭HttpClient
             httpClient.close();
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
         }
-        return null;
+        return response;
     }
 
     public Response callPost(String url, RequestBody request) {
