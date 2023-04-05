@@ -12,4 +12,6 @@ public interface ImgRepository extends SpecificationRepository<Img, String> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM img ORDER BY random() LIMIT 5")
     public List<Img> findRandomImg();
+
+    Img findByUrl(String url);
 }

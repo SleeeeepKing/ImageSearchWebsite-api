@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -85,5 +87,20 @@ public class ImgService {
             normB += Math.pow(vectorB[i], 2);
         }
         return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+    }
+
+    private String doubleArrayToString(double[] vector) {
+        String str = Arrays.toString(vector); // 将double[]转换为字符串
+        return str.substring(1, str.length() - 1); // 去掉左右方括号
+    }
+
+    public void updateImgValue(String url) throws IOException {
+        Img img = imgRepository.findByUrl(url);
+        String imageData = convertImageToBase64(url);
+        // 用imageData作为入参调用api获取value
+        String value = "1,2,3";
+        // todo 将value改成调用api返回的值并使用doubleArrayToString方法将double[]转换为字符串
+        img.setValue(value);
+        imgRepository.save(img);
     }
 }
