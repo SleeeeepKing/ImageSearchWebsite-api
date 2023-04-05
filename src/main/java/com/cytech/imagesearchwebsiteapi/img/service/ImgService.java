@@ -2,10 +2,13 @@ package com.cytech.imagesearchwebsiteapi.img.service;
 
 import com.cytech.imagesearchwebsiteapi.img.domain.Img;
 import com.cytech.imagesearchwebsiteapi.img.domain.dto.ImgDTO;
+import com.cytech.imagesearchwebsiteapi.img.domain.dto.ImgData;
 import com.cytech.imagesearchwebsiteapi.img.repository.ImgRepository;
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.exception.DockerException;
-import com.github.dockerjava.api.model.Container;
+import com.cytech.imagesearchwebsiteapi.utils.api.ApiCaller;
+import com.cytech.imagesearchwebsiteapi.utils.api.domain.RequestBody;
+import com.cytech.imagesearchwebsiteapi.utils.api.domain.Response;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,19 +19,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ImgService {
     @Autowired
     private ImgRepository imgRepository;
     @Autowired
-    private DockerClient dockerClient;
+    private ApiCaller apiCaller;
 
-    public List<ImgDTO> getRandomImgList() throws IOException {
+    public List<ImgDTO> getRandomImgList() {
         List<Img> imgs = imgRepository.findRandomImg();
         List<ImgDTO> imgList = new ArrayList<>();
 
@@ -45,6 +45,10 @@ public class ImgService {
 
         return imgList;
     }
+
+    /**
+     * 计算两个向量的余弦相似度
+     */
 
     public ImgDTO getImgList(String id) throws IOException {
         // todo 将strVex改成把id转换成向量
@@ -101,26 +105,19 @@ public class ImgService {
         String str = Arrays.toString(vector); // 将double[]转换为字符串
         return str.substring(1, str.length() - 1); // 去掉左右方括号
     }
-
-    @RequestMapping(value = "/containers", method = RequestMethod.POST)
-    @ResponseBody
-    public List<Container> getContainers() throws DockerException, InterruptedException {
-//        List<Container> containers = dockerClient.listContainers();
-//        return containers;
-        return null;
-    }
-
     public void updateImgValue(String url) throws IOException {
         Img img = imgRepository.findByUrl(url);
-        String imageData = convertImageToBase64(url);
-        // 用imageData作为入参调用api获取value
-        String value = "1,2,3";
-        // todo 将value改成调用api返回的值并使用doubleArrayToString方法将double[]转换为字符串
-        img.setValue(value);
-        imgRepository.save(img);
+        ImgData imgData = new ImgData(convertImageToBase64(url));
+        // 用imageData转为json并作为入参调用api获取value
+        RequestBody requestBody = new RequestBody("image_data", imgData.getImage_data());
+        // 将value改成调用api返回的值并使用doubleArrayToString方法将double[]转换为字符串
+        Response response = apiCaller.callPost("http://localhost:8990/image2predict", requestBody);
+//        String value = doubleArrayToString(response.getData());
+//        img.setValue(value);
+//        imgRepository.save(img);
     }
 
-    public void updateAllImgValue(){
+    public void updateAllImgValue() {
         List<Img> imgs = imgRepository.findAll();
         imgs.forEach(img -> {
             try {
@@ -130,5 +127,16 @@ public class ImgService {
             }
         });
         imgRepository.saveAll(imgs);
+    }
+
+    private String objectToJson(Object object) {
+        ObjectMapper mapper = new ObjectMapper();
+        String json = null;
+        try {
+            json = mapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }
