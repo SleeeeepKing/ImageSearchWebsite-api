@@ -119,4 +119,16 @@ public class ImgService {
         img.setValue(value);
         imgRepository.save(img);
     }
+
+    public void updateAllImgValue(){
+        List<Img> imgs = imgRepository.findAll();
+        imgs.forEach(img -> {
+            try {
+                updateImgValue(img.getUrl());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        imgRepository.saveAll(imgs);
+    }
 }
