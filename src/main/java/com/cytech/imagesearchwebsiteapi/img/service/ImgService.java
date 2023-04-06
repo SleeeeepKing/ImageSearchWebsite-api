@@ -52,8 +52,8 @@ public class ImgService {
 
     public ImgDTO getImgList(String text) throws IOException {
         // todo 将strVex改成把id转换成向量
-        Object doubleArr = apiCaller.callGet("http://localhost:8990/text2predict", new RequestBody("text", text)).getData();
-        double[] strVex = ((double[][]) doubleArr)[0];
+        Object doubleArr = apiCaller.callGet("http://localhost:8990/text2predict/", new RequestBody("text", text)).getData();
+        double[] strVex = stringToDoubleArray(doubleArr.toString().substring(2, doubleArr.toString().length() - 2));
         List<Img> imgList = imgRepository.findAll();
         List<double[]> imgVexList = new ArrayList<>();
         imgList.forEach(img -> {
@@ -106,16 +106,25 @@ public class ImgService {
         String str = Arrays.toString(vector); // 将double[]转换为字符串
         return str.substring(1, str.length() - 1); // 去掉左右方括号
     }
+
+    private double[] stringToDoubleArray(String str) {
+        String[] strArr = str.split(","); // 将字符串转换为double[]
+        double[] doubleArr = new double[strArr.length];
+        for (int i = 0; i < strArr.length; i++) {
+            doubleArr[i] = Double.parseDouble(strArr[i]);
+        }
+        return doubleArr;
+    }
     public void updateImgValue(String url) throws IOException {
         Img img = imgRepository.findByUrl(url);
         ImgData imgData = new ImgData(convertImageToBase64(img.getUrl()));
         // 用imageData转为json并作为入参调用api获取value
         RequestBody requestBody = new RequestBody("image_data", imgData.getImage_data());
         // 将value改成调用api返回的值并使用doubleArrayToString方法将double[]转换为字符串
-        Response response = apiCaller.callPost("http://localhost:8990/image2predict", requestBody);
-//        String value = doubleArrayToString(response.getData());
-//        img.setValue(value);
-//        imgRepository.save(img);
+        Response response = apiCaller.callPost("http://localhost:8990/image2predict/", requestBody);
+        String value = response.getData().toString().substring(2, response.getData().toString().length() - 2);
+        img.setValue(value);
+        imgRepository.save(img);
     }
 
     public void updateAllImgValue() {
@@ -127,7 +136,6 @@ public class ImgService {
                 throw new RuntimeException(e);
             }
         });
-        imgRepository.saveAll(imgs);
     }
 
     private String objectToJson(Object object) {
