@@ -51,7 +51,6 @@ public class ImgService {
      */
 
     public ImgDTO getImgList(String text) throws IOException {
-        // todo 将strVex改成把id转换成向量
         Object doubleArr = apiCaller.callGet("http://localhost:8990/text2predict/", new RequestBody("text", text)).getData();
         double[] strVex = stringToDoubleArray(doubleArr.toString().substring(2, doubleArr.toString().length() - 2));
         List<Img> imgList = imgRepository.findAll();

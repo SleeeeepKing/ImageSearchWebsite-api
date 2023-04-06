@@ -23,7 +23,7 @@ public class ImgController {
     }
 
     @GetMapping(value = "/random")
-    public List<ImgDTO> getRandomImgList() throws IOException {
+    public List<ImgDTO> getRandomImgList() {
         return imgService.getRandomImgList();
     }
 }
