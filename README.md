@@ -11,4 +11,6 @@ docker pull public.ecr.aws/d2x9y6a2/wy-usage:1.0
 
 * Please change the datasource in application.yml to your database parameter
 
+* The database file is in src/resource/dab/migrate/V1.0.sql
+
 * Run Application to start the project
